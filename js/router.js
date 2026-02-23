@@ -3,6 +3,19 @@
  * History API. No full page reloads.
  */
 
+import {
+  JOBS,
+  getFilteredJobs,
+  getFilterOptions,
+  renderFilterBar,
+  renderJobsList,
+  getJobsByIds,
+  getSavedIds,
+  setupDashboard,
+  setupSaved,
+  setupJobsEventDelegation,
+} from './jobs-ui.js';
+
 const ROUTES = {
   '/': { title: 'Home', pageTitle: 'Home' },
   '/dashboard': { title: 'Dashboard', pageTitle: 'Dashboard' },
@@ -70,28 +83,40 @@ function renderSettings() {
 }
 
 function renderDashboard() {
+  const filters = {};
+  const sort = 'Latest';
+  const filtered = getFilteredJobs(JOBS, filters, sort);
+  const options = getFilterOptions(JOBS);
+  const filterBar = renderFilterBar(options, filters, sort);
+  const jobsList = renderJobsList(filtered, { showSave: true });
   return `
-    <main class="route-page" id="route-content">
+    <main class="route-page route-page--jobs" id="route-content">
       <div class="route-page__content">
         <h1>Dashboard</h1>
-        <div class="empty-state">
-          <h3 class="empty-state__title">No jobs yet</h3>
-          <p class="empty-state__body">In the next step, you will load a realistic dataset.</p>
-        </div>
+        ${filterBar}
+        ${jobsList}
       </div>
     </main>
   `;
 }
 
 function renderSaved() {
+  const savedIds = getSavedIds();
+  const savedJobs = getJobsByIds(savedIds);
+  const content =
+    savedJobs.length > 0
+      ? renderJobsList(savedJobs, { showSave: false, showRemove: true })
+      : `
+    <div class="empty-state">
+      <h3 class="empty-state__title">No saved jobs</h3>
+      <p class="empty-state__body">Jobs you save for later will appear here.</p>
+    </div>
+  `;
   return `
-    <main class="route-page" id="route-content">
+    <main class="route-page route-page--jobs" id="route-content">
       <div class="route-page__content">
         <h1>Saved</h1>
-        <div class="empty-state">
-          <h3 class="empty-state__title">No saved jobs</h3>
-          <p class="empty-state__body">Jobs you save for later will appear here.</p>
-        </div>
+        ${content}
       </div>
     </main>
   `;
@@ -177,6 +202,8 @@ function navigate(path, pushState = true) {
   }
   updateDocumentTitle(normalizedPath);
   setActiveLink(normalizedPath);
+  if (normalizedPath === '/dashboard') setupDashboard();
+  if (normalizedPath === '/saved') setupSaved();
 }
 
 function initRouter() {
@@ -187,6 +214,12 @@ function initRouter() {
   }
   updateDocumentTitle(path);
   setActiveLink(path);
+  if (path === '/dashboard') setupDashboard();
+  if (path === '/saved') setupSaved();
+
+  setupJobsEventDelegation(() => {
+    if (getPath() === '/saved') navigate('/saved', false);
+  });
 
   document.body.addEventListener('click', (e) => {
     const link = e.target.closest('a[href^="/"]');

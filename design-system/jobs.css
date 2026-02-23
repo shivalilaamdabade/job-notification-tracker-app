@@ -1,0 +1,230 @@
+/**
+ * Job Notification Tracker — Job cards, filter bar, modal
+ * Premium design. Subtle borders. No heavy shadows.
+ */
+
+/* ─── FILTER BAR ─────────────────────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.filter-bar__group {
+  flex: 1;
+  min-width: 140px;
+}
+
+.filter-bar__group--search {
+  min-width: 200px;
+}
+
+.filter-bar__label {
+  display: block;
+  font-size: var(--text-size-caption);
+  font-weight: var(--text-weight-medium);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-1);
+}
+
+.filter-bar .input,
+.filter-bar .select {
+  min-height: 38px;
+}
+
+/* ─── JOB CARDS ──────────────────────────────────────────────────────────── */
+.jobs-grid {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.job-card {
+  padding: var(--space-3);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.job-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.job-card__title {
+  font-family: var(--font-sans);
+  font-size: var(--text-size-body);
+  font-weight: var(--text-weight-semibold);
+  margin: 0;
+  color: var(--color-text);
+}
+
+.job-card__source {
+  font-size: var(--text-size-caption);
+  font-weight: var(--text-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.job-card__company {
+  font-size: var(--text-size-small);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.job-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--text-size-small);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.job-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.job-card__salary {
+  font-size: var(--text-size-small);
+  font-weight: var(--text-weight-medium);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.job-card__posted {
+  font-size: var(--text-size-caption);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.job-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.job-card__actions .btn {
+  flex: 1;
+  min-width: 80px;
+}
+
+/* ─── MODAL ───────────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(17, 17, 17, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  z-index: 1000;
+}
+
+.modal-overlay[aria-hidden="true"] {
+  display: none;
+}
+
+.modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+}
+
+.modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.modal__title {
+  font-family: var(--font-serif);
+  font-size: var(--heading-2-size);
+  font-weight: var(--text-weight-regular);
+  margin: 0;
+  color: var(--color-text);
+}
+
+.modal__close {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  transition: color var(--transition-duration) var(--transition-easing);
+}
+
+.modal__close:hover {
+  color: var(--color-text);
+}
+
+.modal__company {
+  font-size: var(--text-size-body);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.modal__description {
+  font-size: var(--text-size-body);
+  line-height: var(--text-line-height);
+  color: var(--color-text);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.modal__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.modal__skill-tag {
+  font-size: var(--text-size-small);
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+}
+
+/* ─── NO RESULTS ─────────────────────────────────────────────────────────── */
+.no-results {
+  padding: var(--space-5);
+  text-align: center;
+}
+
+.no-results__message {
+  font-size: var(--text-size-body);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ─── DASHBOARD LAYOUT ───────────────────────────────────────────────────── */
+.route-page--jobs {
+  justify-content: flex-start;
+}
+
+.route-page--jobs .route-page__content {
+  width: 100%;
+  max-width: 100%;
+}

@@ -52,6 +52,11 @@
   font-size: var(--text-size-small);
 }
 
+.btn--saved {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
 /* ─── INPUTS ─────────────────────────────────────────────────────────────── */
 .input {
   width: 100%;
