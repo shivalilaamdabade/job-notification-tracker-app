@@ -1,0 +1,172 @@
+/**
+ * Job Notification App — Navigation
+ * Shared top bar with links. Clean, minimal. No flashy effects.
+ */
+
+/* ─── TOP NAVIGATION ─────────────────────────────────────────────────────── */
+.app-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: var(--border-width) solid var(--color-border);
+  background-color: var(--color-bg);
+  flex-shrink: 0;
+}
+
+.app-nav__brand {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: var(--text-weight-regular);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: opacity var(--transition-duration) var(--transition-easing);
+}
+
+.app-nav__brand:hover {
+  opacity: 0.85;
+}
+
+.app-nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.app-nav__link {
+  font-family: var(--font-sans);
+  font-size: var(--text-size-body);
+  font-weight: var(--text-weight-regular);
+  color: var(--color-text);
+  text-decoration: none;
+  padding-bottom: var(--space-1);
+  border-bottom: 2px solid transparent;
+  transition: border-color var(--transition-duration) var(--transition-easing),
+              color var(--transition-duration) var(--transition-easing);
+}
+
+.app-nav__link:hover {
+  color: var(--color-text-muted);
+}
+
+.app-nav__link.is-active {
+  border-bottom-color: var(--color-accent);
+  color: var(--color-text);
+  cursor: default;
+}
+
+/* ─── HAMBURGER TOGGLE (mobile) ──────────────────────────────────────────── */
+.app-nav__toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+.app-nav__toggle-icon {
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-text);
+  position: relative;
+  transition: background-color var(--transition-duration) var(--transition-easing);
+}
+
+.app-nav__toggle-icon::before,
+.app-nav__toggle-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-text);
+  transition: transform var(--transition-duration) var(--transition-easing);
+}
+
+.app-nav__toggle-icon::before {
+  top: -7px;
+}
+
+.app-nav__toggle-icon::after {
+  top: 7px;
+}
+
+.app-nav__toggle[aria-expanded="true"] .app-nav__toggle-icon {
+  background-color: transparent;
+}
+
+.app-nav__toggle[aria-expanded="true"] .app-nav__toggle-icon::before {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.app-nav__toggle[aria-expanded="true"] .app-nav__toggle-icon::after {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ─── MOBILE DROPDOWN ────────────────────────────────────────────────────── */
+.app-nav {
+  position: relative;
+}
+
+.app-nav__dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  padding: var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
+.app-nav__dropdown.is-open {
+  display: block;
+}
+
+.app-nav__dropdown .app-nav__links {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.app-nav__dropdown .app-nav__link {
+  display: block;
+  padding: var(--space-2);
+  border-bottom: none;
+  border-left: 3px solid transparent;
+}
+
+.app-nav__dropdown .app-nav__link.is-active {
+  border-left-color: var(--color-accent);
+  border-bottom-color: transparent;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .app-nav {
+    flex-wrap: wrap;
+  }
+
+  .app-nav__links {
+    display: none;
+  }
+
+  .app-nav__toggle {
+    display: flex;
+  }
+
+  .app-nav__dropdown {
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) {
+  .app-nav__dropdown {
+    display: none !important;
+  }
+}

@@ -1,0 +1,87 @@
+/**
+ * Job Notification App — Base Styles
+ * Reset, typography, and global foundations
+ */
+
+/* ─── RESET ─────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-size-body);
+  line-height: var(--text-line-height);
+  min-height: 100vh;
+}
+
+/* ─── TYPOGRAPHY ────────────────────────────────────────────────────────── */
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: var(--text-weight-regular);
+  margin: 0 0 var(--space-2) 0;
+  color: var(--color-text);
+}
+
+h1 {
+  font-size: var(--heading-1-size);
+  line-height: var(--heading-1-line-height);
+  letter-spacing: var(--heading-1-letter-spacing);
+  margin-bottom: var(--space-2);
+}
+
+h2 {
+  font-size: var(--heading-2-size);
+  line-height: var(--heading-2-line-height);
+}
+
+h3 {
+  font-size: var(--heading-3-size);
+  line-height: var(--heading-3-line-height);
+}
+
+p {
+  margin: 0 0 var(--space-2) 0;
+  max-width: var(--text-max-width);
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+  font-size: var(--text-size-small);
+}
+
+.text-small {
+  font-size: var(--text-size-small);
+}
+
+/* ─── LINKS ─────────────────────────────────────────────────────────────── */
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: opacity var(--transition-duration) var(--transition-easing);
+}
+
+a:hover {
+  opacity: 0.85;
+}
+
+/* ─── FOCUS STATES ──────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}

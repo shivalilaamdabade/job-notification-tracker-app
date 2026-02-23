@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Notification App</title>
+  <link rel="stylesheet" href="design-system/index.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SHARED TOP NAVIGATION -->
+    <nav class="app-nav" role="navigation">
+      <a href="/" class="app-nav__brand">Job Notification App</a>
+
+      <div class="app-nav__links" role="menubar">
+        <a href="/dashboard" class="app-nav__link" role="menuitem">Dashboard</a>
+        <a href="/saved" class="app-nav__link" role="menuitem">Saved</a>
+        <a href="/digest" class="app-nav__link" role="menuitem">Digest</a>
+        <a href="/settings" class="app-nav__link" role="menuitem">Settings</a>
+        <a href="/proof" class="app-nav__link" role="menuitem">Proof</a>
+      </div>
+
+      <button class="app-nav__toggle" type="button" aria-expanded="false" aria-controls="nav-dropdown" aria-label="Toggle navigation">
+        <span class="app-nav__toggle-icon"></span>
+      </button>
+
+      <div class="app-nav__dropdown" id="nav-dropdown" aria-hidden="true">
+        <div class="app-nav__links" role="menubar">
+          <a href="/dashboard" class="app-nav__link" role="menuitem">Dashboard</a>
+          <a href="/saved" class="app-nav__link" role="menuitem">Saved</a>
+          <a href="/digest" class="app-nav__link" role="menuitem">Digest</a>
+          <a href="/settings" class="app-nav__link" role="menuitem">Settings</a>
+          <a href="/proof" class="app-nav__link" role="menuitem">Proof</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ROUTE CONTENT (rendered by router) -->
+    <main class="route-page" id="route-content">
+      <div class="route-page__content">
+        <h1>Home</h1>
+        <p class="route-page__subtext">This section will be built in the next step.</p>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initRouter, navigate } from './js/router.js';
+
+    initRouter();
+
+    // Hamburger toggle
+    const toggle = document.querySelector('.app-nav__toggle');
+    const dropdown = document.getElementById('nav-dropdown');
+
+    toggle?.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', !expanded);
+      dropdown?.classList.toggle('is-open', !expanded);
+      dropdown?.setAttribute('aria-hidden', expanded);
+    });
+
+    // Close dropdown when clicking a nav link (mobile)
+    document.querySelectorAll('.app-nav__dropdown .app-nav__link').forEach((link) => {
+      link.addEventListener('click', () => {
+        toggle?.setAttribute('aria-expanded', 'false');
+        dropdown?.classList.remove('is-open');
+        dropdown?.setAttribute('aria-hidden', 'true');
+      });
+    });
+  </script>
+</body>
+</html>

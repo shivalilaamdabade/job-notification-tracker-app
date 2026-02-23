@@ -1,0 +1,201 @@
+/**
+ * Job Notification App — UI Components
+ * Clean, predictable, consistent. Subtle borders. No drop shadows.
+ */
+
+/* ─── BUTTONS ────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--button-height);
+  padding: 0 var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-size-body);
+  font-weight: var(--text-weight-medium);
+  border-radius: var(--radius);
+  border: var(--border-width) solid transparent;
+  cursor: pointer;
+  transition: background-color var(--transition-duration) var(--transition-easing),
+              border-color var(--transition-duration) var(--transition-easing),
+              opacity var(--transition-duration) var(--transition-easing);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-accent);
+}
+
+.btn--primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn--secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  border-color: var(--color-text);
+}
+
+.btn--sm {
+  min-height: 32px;
+  padding: 0 var(--space-2);
+  font-size: var(--text-size-small);
+}
+
+/* ─── INPUTS ─────────────────────────────────────────────────────────────── */
+.input {
+  width: 100%;
+  min-height: var(--input-height);
+  padding: 0 var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--text-size-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+}
+
+.input--error {
+  border-color: var(--color-accent);
+}
+
+/* ─── TEXTAREA ───────────────────────────────────────────────────────────── */
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--text-size-body);
+  line-height: var(--text-line-height);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  resize: vertical;
+  transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+}
+
+/* ─── CARDS ──────────────────────────────────────────────────────────────── */
+.card {
+  padding: var(--space-3);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.card + .card {
+  margin-top: var(--space-2);
+}
+
+.card__title {
+  font-family: var(--font-sans);
+  font-size: var(--text-size-body);
+  font-weight: var(--text-weight-semibold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card__body {
+  margin: 0;
+}
+
+.card__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── PROMPT BOX (copyable) ──────────────────────────────────────────────── */
+.prompt-box {
+  position: relative;
+  padding: var(--space-2);
+  padding-right: 80px;
+  font-family: var(--font-sans);
+  font-size: var(--text-size-small);
+  line-height: var(--text-line-height);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.prompt-box__content {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+}
+
+.prompt-box__copy {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+}
+
+/* ─── ERROR STATE ────────────────────────────────────────────────────────── */
+.error-message {
+  padding: var(--space-2);
+  font-size: var(--text-size-small);
+  color: var(--color-accent);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-accent);
+  border-radius: var(--radius);
+}
+
+.error-message__title {
+  font-weight: var(--text-weight-semibold);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.error-message__body {
+  margin: 0;
+  color: var(--color-text);
+}
+
+/* ─── EMPTY STATE ────────────────────────────────────────────────────────── */
+.empty-state {
+  padding: var(--space-5);
+  text-align: center;
+  border: var(--border-width) dashed var(--color-border);
+  border-radius: var(--radius);
+}
+
+.empty-state__title {
+  font-family: var(--font-sans);
+  font-size: var(--text-size-body);
+  font-weight: var(--text-weight-medium);
+  margin: 0 0 var(--space-1) 0;
+  color: var(--color-text);
+}
+
+.empty-state__body {
+  font-size: var(--text-size-small);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.empty-state__action {
+  margin-top: var(--space-2);
+}

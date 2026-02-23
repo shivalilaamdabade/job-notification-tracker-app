@@ -1,0 +1,70 @@
+/**
+ * Job Notification App — Design Tokens
+ * Premium SaaS design system foundation
+ * Maximum 4 colors. No gradients. No glassmorphism.
+ */
+
+:root {
+  /* ─── COLOR SYSTEM ─────────────────────────────────────────────────────── */
+  --color-bg: #F7F6F3;
+  --color-text: #111111;
+  --color-accent: #8B0000;
+  --color-success: #3D6B4F;
+  --color-warning: #8B6914;
+
+  --color-border: #E5E4E0;
+  --color-border-focus: #111111;
+
+  --color-text-muted: #4A4A4A;
+  --color-text-on-accent: #FFFFFF;
+
+  /* ─── SPACING SCALE (only these values) ────────────────────────────────── */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 40px;
+  --space-5: 64px;
+
+  /* ─── TYPOGRAPHY ──────────────────────────────────────────────────────── */
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-sans: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --text-size-body: 17px;
+  --text-size-small: 14px;
+  --text-size-caption: 12px;
+
+  --text-line-height: 1.65;
+  --text-line-height-tight: 1.35;
+  --text-max-width: 720px;
+
+  --text-weight-regular: 400;
+  --text-weight-medium: 500;
+  --text-weight-semibold: 600;
+
+  /* ─── HEADINGS (serif, large, confident) ───────────────────────────────── */
+  --heading-1-size: 2.5rem;
+  --heading-1-line-height: 1.2;
+  --heading-1-letter-spacing: -0.02em;
+
+  --heading-2-size: 1.75rem;
+  --heading-2-line-height: 1.3;
+
+  --heading-3-size: 1.25rem;
+  --heading-3-line-height: 1.4;
+
+  /* ─── LAYOUT ──────────────────────────────────────────────────────────── */
+  --layout-workspace-ratio: 70%;
+  --layout-panel-ratio: 30%;
+  --layout-gap: var(--space-3);
+  --layout-max-width: 1280px;
+
+  /* ─── COMPONENTS ──────────────────────────────────────────────────────── */
+  --radius: 4px;
+  --border-width: 1px;
+  --input-height: 44px;
+  --button-height: 44px;
+
+  /* ─── TRANSITIONS ─────────────────────────────────────────────────────── */
+  --transition-duration: 175ms;
+  --transition-easing: ease-in-out;
+}

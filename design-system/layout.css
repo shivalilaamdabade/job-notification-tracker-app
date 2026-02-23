@@ -1,0 +1,163 @@
+/**
+ * Job Notification App — Layout Structure
+ * Every page: Top Bar → Context Header → Workspace + Panel → Proof Footer
+ */
+
+/* ─── LAYOUT CONTAINER ──────────────────────────────────────────────────── */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+}
+
+/* ─── TOP BAR ───────────────────────────────────────────────────────────── */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: var(--border-width) solid var(--color-border);
+  background-color: var(--color-bg);
+  flex-shrink: 0;
+}
+
+.top-bar__brand {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: var(--text-weight-regular);
+  color: var(--color-text);
+}
+
+.top-bar__progress {
+  font-size: var(--text-size-small);
+  color: var(--color-text-muted);
+}
+
+.top-bar__status {
+  font-size: var(--text-size-small);
+  font-weight: var(--text-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: var(--color-bg);
+}
+
+.top-bar__status--shipped {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.top-bar__status--in-progress {
+  border-color: var(--color-warning);
+  color: var(--color-warning);
+}
+
+/* ─── CONTEXT HEADER ────────────────────────────────────────────────────── */
+.context-header {
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.context-header h1 {
+  margin-bottom: var(--space-1);
+}
+
+.context-header__subtext {
+  font-size: var(--text-size-body);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ─── MAIN CONTENT AREA ─────────────────────────────────────────────────── */
+.main-content {
+  display: flex;
+  flex: 1;
+  gap: var(--layout-gap);
+  padding: var(--space-4);
+}
+
+/* ─── PRIMARY WORKSPACE (70%) ───────────────────────────────────────────── */
+.workspace {
+  flex: 1;
+  min-width: 0;
+}
+
+.workspace__inner {
+  max-width: 100%;
+}
+
+/* ─── SECONDARY PANEL (30%) ─────────────────────────────────────────────── */
+.side-panel {
+  width: 360px;
+  flex-shrink: 0;
+  padding-left: var(--space-3);
+  border-left: var(--border-width) solid var(--color-border);
+}
+
+.side-panel__section {
+  margin-bottom: var(--space-4);
+}
+
+.side-panel__section:last-child {
+  margin-bottom: 0;
+}
+
+.side-panel__title {
+  font-family: var(--font-sans);
+  font-size: var(--text-size-small);
+  font-weight: var(--text-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-2) 0;
+}
+
+/* ─── PROOF FOOTER ──────────────────────────────────────────────────────── */
+.proof-footer {
+  padding: var(--space-3) var(--space-4);
+  border-top: var(--border-width) solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
+.proof-footer__title {
+  font-size: var(--text-size-small);
+  font-weight: var(--text-weight-semibold);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.proof-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.proof-checklist__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-size-small);
+  color: var(--color-text-muted);
+}
+
+.proof-checklist__item--done {
+  color: var(--color-success);
+}
+
+.proof-checklist__checkbox {
+  width: 18px;
+  height: 18px;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+.proof-checklist__item--done .proof-checklist__checkbox {
+  border-color: var(--color-success);
+  background-color: var(--color-success);
+}
