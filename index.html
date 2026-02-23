@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Job Notification App</title>
+  <title>Job Notification Tracker</title>
   <link rel="stylesheet" href="design-system/index.css">
 </head>
 <body>
   <div class="app-layout">
     <!-- SHARED TOP NAVIGATION -->
     <nav class="app-nav" role="navigation">
-      <a href="/" class="app-nav__brand">Job Notification App</a>
+      <a href="/" class="app-nav__brand">Job Notification Tracker</a>
 
       <div class="app-nav__links" role="menubar">
         <a href="/dashboard" class="app-nav__link" role="menuitem">Dashboard</a>
@@ -36,10 +36,11 @@
     </nav>
 
     <!-- ROUTE CONTENT (rendered by router) -->
-    <main class="route-page" id="route-content">
+    <main class="route-page route-page--landing" id="route-content">
       <div class="route-page__content">
-        <h1>Home</h1>
-        <p class="route-page__subtext">This section will be built in the next step.</p>
+        <h1 class="landing-headline">Stop Missing The Right Jobs.</h1>
+        <p class="route-page__subtext landing-subtext">Precision-matched job discovery delivered daily at 9AM.</p>
+        <a href="/settings" class="btn btn--primary landing-cta">Start Tracking</a>
       </div>
     </main>
   </div>
@@ -48,6 +49,13 @@
     import { initRouter, navigate } from './js/router.js';
 
     initRouter();
+
+    // Prevent form submission (settings form is UI placeholder only)
+    document.body.addEventListener('submit', (e) => {
+      if (e.target.classList.contains('settings-form')) {
+        e.preventDefault();
+      }
+    });
 
     // Hamburger toggle
     const toggle = document.querySelector('.app-nav__toggle');

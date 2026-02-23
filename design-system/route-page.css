@@ -24,3 +24,31 @@
   color: var(--color-text-muted);
   margin: 0;
 }
+
+/* ─── LANDING PAGE ────────────────────────────────────────────────────────── */
+.route-page--landing .route-page__content {
+  text-align: left;
+}
+
+.landing-headline {
+  font-size: var(--heading-1-size);
+  margin-bottom: var(--space-3);
+}
+
+.landing-subtext {
+  margin-bottom: var(--space-4);
+}
+
+.landing-cta {
+  display: inline-flex;
+}
+
+/* ─── SETTINGS FORM ───────────────────────────────────────────────────────── */
+.route-page--form .settings-form {
+  margin-top: var(--space-4);
+  max-width: 480px;
+}
+
+.route-page--form .form-group:last-child {
+  margin-bottom: 0;
+}

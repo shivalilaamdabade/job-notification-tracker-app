@@ -1,6 +1,6 @@
 /**
- * Job Notification App — Client-side Router
- * History API. No full page reloads. Active link does not reload.
+ * Job Notification Tracker — Client-side Router
+ * History API. No full page reloads.
  */
 
 const ROUTES = {
@@ -12,7 +12,6 @@ const ROUTES = {
   '/proof': { title: 'Proof', pageTitle: 'Proof' }
 };
 
-const PLACEHOLDER_SUBTEXT = 'This section will be built in the next step.';
 const NOT_FOUND_TITLE = 'Page Not Found';
 const NOT_FOUND_SUBTEXT = 'The page you are looking for does not exist.';
 
@@ -24,25 +23,134 @@ function getRoute(path) {
   return ROUTES[path] || null;
 }
 
-function renderPage(path) {
-  const route = getRoute(path);
-  const is404 = !route;
-  const title = is404 ? NOT_FOUND_TITLE : route.pageTitle;
-  const subtext = is404 ? NOT_FOUND_SUBTEXT : PLACEHOLDER_SUBTEXT;
-
+function renderLanding() {
   return `
-    <main class="route-page" id="route-content">
+    <main class="route-page route-page--landing" id="route-content">
       <div class="route-page__content">
-        <h1>${title}</h1>
-        <p class="route-page__subtext">${subtext}</p>
+        <h1 class="landing-headline">Stop Missing The Right Jobs.</h1>
+        <p class="route-page__subtext landing-subtext">Precision-matched job discovery delivered daily at 9AM.</p>
+        <a href="/settings" class="btn btn--primary landing-cta">Start Tracking</a>
       </div>
     </main>
   `;
 }
 
+function renderSettings() {
+  return `
+    <main class="route-page route-page--form" id="route-content">
+      <div class="route-page__content">
+        <h1>Settings</h1>
+        <p class="route-page__subtext">Configure your job preferences. Changes are not saved yet.</p>
+        <form class="settings-form">
+          <div class="form-group">
+            <label class="form-group__label" for="role-keywords">Role keywords</label>
+            <input type="text" id="role-keywords" class="input" placeholder="e.g. Software Engineer, Product Manager">
+          </div>
+          <div class="form-group">
+            <label class="form-group__label" for="locations">Preferred locations</label>
+            <input type="text" id="locations" class="input" placeholder="e.g. San Francisco, Remote">
+          </div>
+          <div class="form-group">
+            <label class="form-group__label" for="mode">Mode</label>
+            <select id="mode" class="select">
+              <option value="">Select mode</option>
+              <option value="remote">Remote</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="onsite">Onsite</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-group__label" for="experience">Experience level</label>
+            <input type="text" id="experience" class="input" placeholder="e.g. Mid-level, Senior">
+          </div>
+        </form>
+      </div>
+    </main>
+  `;
+}
+
+function renderDashboard() {
+  return `
+    <main class="route-page" id="route-content">
+      <div class="route-page__content">
+        <h1>Dashboard</h1>
+        <div class="empty-state">
+          <h3 class="empty-state__title">No jobs yet</h3>
+          <p class="empty-state__body">In the next step, you will load a realistic dataset.</p>
+        </div>
+      </div>
+    </main>
+  `;
+}
+
+function renderSaved() {
+  return `
+    <main class="route-page" id="route-content">
+      <div class="route-page__content">
+        <h1>Saved</h1>
+        <div class="empty-state">
+          <h3 class="empty-state__title">No saved jobs</h3>
+          <p class="empty-state__body">Jobs you save for later will appear here.</p>
+        </div>
+      </div>
+    </main>
+  `;
+}
+
+function renderDigest() {
+  return `
+    <main class="route-page" id="route-content">
+      <div class="route-page__content">
+        <h1>Digest</h1>
+        <div class="empty-state">
+          <h3 class="empty-state__title">Daily summary</h3>
+          <p class="empty-state__body">Your personalized job digest will be delivered daily at 9AM.</p>
+        </div>
+      </div>
+    </main>
+  `;
+}
+
+function renderProof() {
+  return `
+    <main class="route-page" id="route-content">
+      <div class="route-page__content">
+        <h1>Proof</h1>
+        <p class="route-page__subtext">Placeholder for artifact collection.</p>
+      </div>
+    </main>
+  `;
+}
+
+function render404() {
+  return `
+    <main class="route-page" id="route-content">
+      <div class="route-page__content">
+        <h1>${NOT_FOUND_TITLE}</h1>
+        <p class="route-page__subtext">${NOT_FOUND_SUBTEXT}</p>
+      </div>
+    </main>
+  `;
+}
+
+function renderPage(path) {
+  const route = getRoute(path);
+  if (!route) return render404();
+
+  switch (path) {
+    case '/': return renderLanding();
+    case '/settings': return renderSettings();
+    case '/dashboard': return renderDashboard();
+    case '/saved': return renderSaved();
+    case '/digest': return renderDigest();
+    case '/proof': return renderProof();
+    default: return render404();
+  }
+}
+
 function updateDocumentTitle(path) {
   const route = getRoute(path);
-  const baseTitle = 'Job Notification App';
+  const baseTitle = 'Job Notification Tracker';
   document.title = route ? `${route.title} — ${baseTitle}` : `${NOT_FOUND_TITLE} — ${baseTitle}`;
 }
 

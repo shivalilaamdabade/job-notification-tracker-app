@@ -79,6 +79,39 @@
   border-color: var(--color-accent);
 }
 
+/* ─── SELECT ────────────────────────────────────────────────────────────── */
+.select {
+  width: 100%;
+  min-height: var(--input-height);
+  padding: 0 var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--text-size-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+}
+
+/* ─── FORM GROUP ─────────────────────────────────────────────────────────── */
+.form-group {
+  margin-bottom: var(--space-3);
+}
+
+.form-group__label {
+  display: block;
+  font-size: var(--text-size-small);
+  font-weight: var(--text-weight-medium);
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
+}
+
 /* ─── TEXTAREA ───────────────────────────────────────────────────────────── */
 .textarea {
   width: 100%;
