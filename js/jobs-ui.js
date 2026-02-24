@@ -3,6 +3,8 @@
  */
 
 import { JOBS } from './jobs-data.js';
+import { getPreferences, hasPreferencesSet } from './preferences.js';
+import { computeMatchScore, getMatchScoreBadgeClass } from './match-score.js';
 
 const SAVED_IDS_KEY = 'job-tracker-saved-ids';
 
@@ -55,12 +57,26 @@ function filterJobs(jobs, filters) {
   });
 }
 
-function sortJobs(jobs, sortBy) {
+function extractSalaryValue(salaryRange) {
+  if (!salaryRange) return 0;
+  const str = String(salaryRange);
+  const lpaMatch = str.match(/(\d+)\s*[–-]\s*(\d+)\s*LPA/i);
+  if (lpaMatch) return (parseInt(lpaMatch[1], 10) + parseInt(lpaMatch[2], 10)) / 2;
+  const numMatch = str.match(/(\d+)/);
+  return numMatch ? parseInt(numMatch[1], 10) : 0;
+}
+
+function sortJobs(jobs, sortBy, scoredJobs) {
   const copy = [...jobs];
   if (sortBy === 'Latest') {
     copy.sort((a, b) => a.postedDaysAgo - b.postedDaysAgo);
   } else if (sortBy === 'Oldest') {
     copy.sort((a, b) => b.postedDaysAgo - a.postedDaysAgo);
+  } else if (sortBy === 'Match Score') {
+    const scoreMap = new Map(scoredJobs.map((j) => [j.id, j.matchScore]));
+    copy.sort((a, b) => (scoreMap.get(b.id) ?? 0) - (scoreMap.get(a.id) ?? 0));
+  } else if (sortBy === 'Salary') {
+    copy.sort((a, b) => extractSalaryValue(b.salaryRange) - extractSalaryValue(a.salaryRange));
   } else if (sortBy === 'Company A-Z') {
     copy.sort((a, b) => a.company.localeCompare(b.company));
   } else if (sortBy === 'Company Z-A') {
@@ -69,10 +85,24 @@ function sortJobs(jobs, sortBy) {
   return copy;
 }
 
-export function getFilteredJobs(jobs, filters, sortBy = 'Latest') {
-  const filtered = filterJobs(jobs, filters);
-  return sortJobs(filtered, sortBy);
+export function getFilteredJobs(jobs, filters, sortBy = 'Latest', options = {}) {
+  const { showOnlyMatches = false } = options;
+  const prefs = getPreferences();
+  let filtered = filterJobs(jobs, filters);
+  const scoredJobs = filtered.map((job) => ({
+    ...job,
+    matchScore: computeMatchScore(job, prefs)
+  }));
+  if (showOnlyMatches) {
+    const threshold = prefs.minMatchScore ?? 40;
+    filtered = scoredJobs.filter((j) => j.matchScore >= threshold);
+  } else {
+    filtered = scoredJobs;
+  }
+  return sortJobs(filtered, sortBy, filtered);
 }
+
+export { hasPreferencesSet };
 
 export function getFilterOptions(jobs) {
   return {
@@ -90,7 +120,7 @@ function formatPosted(days) {
 }
 
 function renderJobCard(job, options = {}) {
-  const { showSave = true, showRemove = false } = options;
+  const { showSave = true, showRemove = false, matchScore } = options;
   const isSaved = isJobSaved(job.id);
   const saveLabel = isSaved ? 'Saved' : 'Save';
   const saveClass = isSaved ? 'btn--secondary btn--saved' : 'btn--secondary';
@@ -100,11 +130,18 @@ function renderJobCard(job, options = {}) {
   const saveBtn = showSave
     ? `<button type="button" class="btn btn--sm ${saveClass} job-btn-save" data-job-id="${job.id}">${saveLabel}</button>`
     : '';
+  const matchBadge =
+    matchScore != null
+      ? `<span class="job-card__match-badge ${getMatchScoreBadgeClass(matchScore)}">${matchScore}</span>`
+      : '';
   return `
     <article class="job-card" data-job-id="${job.id}">
       <div class="job-card__header">
         <h3 class="job-card__title">${escapeHtml(job.title)}</h3>
-        <span class="job-card__source">${escapeHtml(job.source)}</span>
+        <div class="job-card__badges">
+          ${matchBadge}
+          <span class="job-card__source">${escapeHtml(job.source)}</span>
+        </div>
       </div>
       <p class="job-card__company">${escapeHtml(job.company)}</p>
       <div class="job-card__meta">
@@ -133,7 +170,7 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-export function renderFilterBar(options, currentFilters, currentSort) {
+export function renderFilterBar(options, currentFilters, currentSort, showOnlyMatches = false) {
   const { locations, modes, experiences, sources } = options;
   const locOpts = locations
     .map((l) => `<option value="${escapeHtml(l)}" ${currentFilters.location === l ? 'selected' : ''}>${escapeHtml(l)}</option>`)
@@ -149,6 +186,10 @@ export function renderFilterBar(options, currentFilters, currentSort) {
     .join('');
 
   return `
+    <div class="filter-toggle">
+      <input type="checkbox" id="show-only-matches" class="filter-toggle__input" ${showOnlyMatches ? 'checked' : ''}>
+      <label for="show-only-matches" class="filter-toggle__label">Show only jobs above my threshold</label>
+    </div>
     <div class="filter-bar" id="filter-bar">
       <div class="filter-bar__group filter-bar__group--search">
         <label class="filter-bar__label" for="filter-keyword">Search</label>
@@ -182,6 +223,8 @@ export function renderFilterBar(options, currentFilters, currentSort) {
         <label class="filter-bar__label" for="filter-sort">Sort</label>
         <select id="filter-sort" class="select">
           <option value="Latest" ${currentSort === 'Latest' ? 'selected' : ''}>Latest</option>
+          <option value="Match Score" ${currentSort === 'Match Score' ? 'selected' : ''}>Match Score</option>
+          <option value="Salary" ${currentSort === 'Salary' ? 'selected' : ''}>Salary</option>
           <option value="Oldest" ${currentSort === 'Oldest' ? 'selected' : ''}>Oldest</option>
           <option value="Company A-Z" ${currentSort === 'Company A-Z' ? 'selected' : ''}>Company A-Z</option>
           <option value="Company Z-A" ${currentSort === 'Company Z-A' ? 'selected' : ''}>Company Z-A</option>
@@ -191,19 +234,29 @@ export function renderFilterBar(options, currentFilters, currentSort) {
   `;
 }
 
+const NO_MATCHES_MESSAGE = 'No roles match your criteria. Adjust filters or lower threshold.';
+
 export function renderJobsList(jobs, options = {}) {
-  const { showSave = true, showRemove = false } =
+  const { showSave = true, showRemove = false, noMatchesMessage = NO_MATCHES_MESSAGE } =
     typeof options === 'boolean' ? { showSave: options } : options;
   const content =
     jobs.length === 0
       ? `
       <div class="no-results">
-        <p class="no-results__message">No jobs match your search.</p>
+        <p class="no-results__message">${escapeHtml(noMatchesMessage)}</p>
       </div>
     `
       : `
     <div class="jobs-grid">
-      ${jobs.map((j) => renderJobCard(j, { showSave, showRemove })).join('')}
+      ${jobs
+        .map((j) =>
+          renderJobCard(j, {
+            showSave,
+            showRemove,
+            matchScore: j.matchScore
+          })
+        )
+        .join('')}
     </div>
   `;
   return `<div id="jobs-container">${content}</div>`;
@@ -253,10 +306,15 @@ function getCurrentSort() {
   return document.getElementById('filter-sort')?.value || 'Latest';
 }
 
+function getShowOnlyMatches() {
+  return document.getElementById('show-only-matches')?.checked ?? false;
+}
+
 function applyFiltersAndRender() {
   const filters = getCurrentFilters();
   const sort = getCurrentSort();
-  const filtered = getFilteredJobs(JOBS, filters, sort);
+  const showOnlyMatches = getShowOnlyMatches();
+  const filtered = getFilteredJobs(JOBS, filters, sort, { showOnlyMatches });
   const container = document.getElementById('jobs-container');
   if (container) {
     container.outerHTML = renderJobsList(filtered, { showSave: true });
@@ -300,6 +358,7 @@ export function setupDashboard() {
   const experienceEl = document.getElementById('filter-experience');
   const sourceEl = document.getElementById('filter-source');
   const sortEl = document.getElementById('filter-sort');
+  const showOnlyMatchesEl = document.getElementById('show-only-matches');
 
   const handleFilterChange = () => applyFiltersAndRender();
   keywordEl?.addEventListener('input', handleFilterChange);
@@ -308,6 +367,7 @@ export function setupDashboard() {
   experienceEl?.addEventListener('change', handleFilterChange);
   sourceEl?.addEventListener('change', handleFilterChange);
   sortEl?.addEventListener('change', handleFilterChange);
+  showOnlyMatchesEl?.addEventListener('change', handleFilterChange);
 }
 
 export function setupSaved() {
