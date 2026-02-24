@@ -5,6 +5,7 @@
 import { JOBS } from './jobs-data.js';
 import { getPreferences, hasPreferencesSet } from './preferences.js';
 import { computeMatchScore, getMatchScoreBadgeClass } from './match-score.js';
+import { getJobStatus, setJobStatus, getStatusBadgeClass } from './status.js';
 
 const SAVED_IDS_KEY = 'job-tracker-saved-ids';
 
@@ -53,6 +54,10 @@ function filterJobs(jobs, filters) {
     if (filters.experience && job.experience !== filters.experience)
       return false;
     if (filters.source && job.source !== filters.source) return false;
+    if (filters.status && filters.status !== 'All') {
+      const jobStatus = getJobStatus(job.id).status || 'Not Applied';
+      if (jobStatus !== filters.status) return false;
+    }
     return true;
   });
 }
@@ -134,6 +139,17 @@ function renderJobCard(job, options = {}) {
     matchScore != null
       ? `<span class="job-card__match-badge ${getMatchScoreBadgeClass(matchScore)}">${matchScore}</span>`
       : '';
+  const currentStatus = getJobStatus(job.id).status || 'Not Applied';
+  const statusBadgeClass = getStatusBadgeClass(currentStatus);
+  const statuses = ['Not Applied', 'Applied', 'Rejected', 'Selected'];
+  const statusButtons = statuses
+    .map(
+      (s) =>
+        `<button type="button" class="job-status-btn${
+          s === currentStatus ? ' is-active' : ''
+        }" data-status="${s}">${s}</button>`
+    )
+    .join('');
   return `
     <article class="job-card" data-job-id="${job.id}">
       <div class="job-card__header">
@@ -153,6 +169,12 @@ function renderJobCard(job, options = {}) {
       </div>
       <p class="job-card__salary">${escapeHtml(job.salaryRange)}</p>
       <p class="job-card__posted">${formatPosted(job.postedDaysAgo)}</p>
+      <div class="job-status">
+        <span class="job-status-badge ${statusBadgeClass}">${currentStatus}</span>
+        <div class="job-status__controls">
+          ${statusButtons}
+        </div>
+      </div>
       <div class="job-card__actions">
         <button type="button" class="btn btn--secondary btn--sm job-btn-view" data-job-id="${job.id}">View</button>
         ${saveBtn}
@@ -217,6 +239,16 @@ export function renderFilterBar(options, currentFilters, currentSort, showOnlyMa
         <label class="filter-bar__label" for="filter-source">Source</label>
         <select id="filter-source" class="select">
           <option value="">All</option>${srcOpts}
+        </select>
+      </div>
+      <div class="filter-bar__group">
+        <label class="filter-bar__label" for="filter-status">Status</label>
+        <select id="filter-status" class="select">
+          <option value="All" ${currentFilters.status === 'All' ? 'selected' : ''}>All</option>
+          <option value="Not Applied" ${currentFilters.status === 'Not Applied' ? 'selected' : ''}>Not Applied</option>
+          <option value="Applied" ${currentFilters.status === 'Applied' ? 'selected' : ''}>Applied</option>
+          <option value="Rejected" ${currentFilters.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+          <option value="Selected" ${currentFilters.status === 'Selected' ? 'selected' : ''}>Selected</option>
         </select>
       </div>
       <div class="filter-bar__group">
@@ -299,7 +331,8 @@ function getCurrentFilters() {
   const mode = document.getElementById('filter-mode')?.value || '';
   const experience = document.getElementById('filter-experience')?.value || '';
   const source = document.getElementById('filter-source')?.value || '';
-  return { keyword, location, mode, experience, source };
+  const status = document.getElementById('filter-status')?.value || 'All';
+  return { keyword, location, mode, experience, source, status };
 }
 
 function getCurrentSort() {
@@ -359,6 +392,7 @@ export function setupDashboard() {
   const sourceEl = document.getElementById('filter-source');
   const sortEl = document.getElementById('filter-sort');
   const showOnlyMatchesEl = document.getElementById('show-only-matches');
+   const statusEl = document.getElementById('filter-status');
 
   const handleFilterChange = () => applyFiltersAndRender();
   keywordEl?.addEventListener('input', handleFilterChange);
@@ -368,6 +402,7 @@ export function setupDashboard() {
   sourceEl?.addEventListener('change', handleFilterChange);
   sortEl?.addEventListener('change', handleFilterChange);
   showOnlyMatchesEl?.addEventListener('change', handleFilterChange);
+  statusEl?.addEventListener('change', handleFilterChange);
 }
 
 export function setupSaved() {
@@ -407,9 +442,48 @@ export function setupJobsEventDelegation(onSavedUpdate) {
       return;
     }
 
+    const statusBtn = e.target.closest('.job-status-btn');
+    if (statusBtn) {
+      const jobCard = statusBtn.closest('.job-card');
+      const jobId = jobCard?.dataset.jobId;
+      const newStatus = statusBtn.dataset.status;
+      if (jobId && newStatus) {
+        setJobStatus(jobId, newStatus);
+        jobCard
+          .querySelectorAll('.job-status-btn')
+          .forEach((btn) => btn.classList.toggle('is-active', btn === statusBtn));
+        const badge = jobCard.querySelector('.job-status-badge');
+        if (badge) {
+          badge.textContent = newStatus;
+          badge.className = `job-status-badge ${getStatusBadgeClass(newStatus)}`;
+        }
+        showToast(`Status updated: ${newStatus}`);
+        onSavedUpdate?.();
+      }
+      return;
+    }
+
     if (e.target.id === 'modal-close' || e.target.classList?.contains('modal-overlay')) {
       closeModal();
       return;
     }
   });
+}
+
+let toastTimeoutId = null;
+
+function showToast(message) {
+  let toast = document.getElementById('app-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'app-toast';
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('toast--visible');
+  if (toastTimeoutId) clearTimeout(toastTimeoutId);
+  toastTimeoutId = setTimeout(() => {
+    toast.classList.remove('toast--visible');
+  }, 2500);
 }

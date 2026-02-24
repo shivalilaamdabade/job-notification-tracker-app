@@ -158,6 +158,69 @@
   min-width: 80px;
 }
 
+/* ─── JOB STATUS ─────────────────────────────────────────────────────────── */
+.job-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.job-status__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.job-status-badge {
+  font-size: var(--text-size-caption);
+  font-weight: var(--text-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  border: var(--border-width) solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.status-badge--neutral {
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+
+.status-badge--applied {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.status-badge--rejected {
+  background-color: var(--color-bg);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.status-badge--selected {
+  background-color: var(--color-success);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-success);
+}
+
+.job-status-btn {
+  font-size: var(--text-size-caption);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  border: var(--border-width) solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.job-status-btn.is-active {
+  border-color: var(--color-border-focus);
+  color: var(--color-text);
+}
+
 /* ─── MODAL ───────────────────────────────────────────────────────────────── */
 .modal-overlay {
   position: fixed;
@@ -285,6 +348,30 @@
   font-size: var(--text-size-small);
   color: var(--color-text);
   cursor: pointer;
+}
+
+/* ─── TOAST ──────────────────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: var(--text-size-small);
+  color: var(--color-text);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--transition-duration) var(--transition-easing),
+    transform var(--transition-duration) var(--transition-easing);
+  pointer-events: none;
+  z-index: 1100;
+}
+
+.toast--visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ─── DASHBOARD LAYOUT ───────────────────────────────────────────────────── */

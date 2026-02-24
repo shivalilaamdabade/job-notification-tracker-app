@@ -17,6 +17,7 @@ import {
   setupJobsEventDelegation,
 } from './jobs-ui.js';
 import { getPreferences, savePreferences } from './preferences.js';
+import { getRecentStatusUpdates } from './status.js';
 
 const ROUTES = {
   '/': { title: 'Home', pageTitle: 'Home' },
@@ -176,6 +177,36 @@ function renderSaved() {
 }
 
 function renderDigest() {
+  const updates = getRecentStatusUpdates(10);
+  const updatesSection =
+    updates.length > 0
+      ? `
+        <section style="margin-top: var(--space-4);">
+          <h2 style="margin-bottom: var(--space-2);">Recent Status Updates</h2>
+          <div class="jobs-grid">
+            ${updates
+              .map(
+                (u) => `
+              <article class="card">
+                <h3 class="card__title">${u.job.title}</h3>
+                <p class="card__body">
+                  ${u.job.company} &mdash; ${u.status} on ${new Date(
+                    u.updatedAt
+                  ).toLocaleDateString()}
+                </p>
+              </article>
+            `
+              )
+              .join('')}
+          </div>
+        </section>
+      `
+      : `
+        <section style="margin-top: var(--space-4);">
+          <h2 style="margin-bottom: var(--space-2);">Recent Status Updates</h2>
+          <p class="route-page__subtext">No recent status changes.</p>
+        </section>
+      `;
   return `
     <main class="route-page" id="route-content">
       <div class="route-page__content">
@@ -184,6 +215,7 @@ function renderDigest() {
           <h3 class="empty-state__title">Daily summary</h3>
           <p class="empty-state__body">Your personalized job digest will be delivered daily at 9AM.</p>
         </div>
+        ${updatesSection}
       </div>
     </main>
   `;
